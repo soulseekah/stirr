@@ -11,12 +11,17 @@ def main():
 
 	parser.add_argument(
 		'-c', '--config',
-		nargs=1, default='config.json',
+		nargs='?', default='config.json',
 		help='the configuration file to load',
 	)
 	parser.add_argument(
 		'--debug', '-d', action='store_true',
 		help='output debug information',
+	)
+	parser.add_argument(
+		'--bind', nargs='?', default='tcp://127.0.0.1:5555',
+		metavar='ADDRESS',
+		help='the address string in the form of protocol://interface:port'
 	)
 
 	args = parser.parse_args()
