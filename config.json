@@ -30,9 +30,9 @@
 			}
 		},
 		{
-			"group": "fortune", "type": "Base", "weight": 0.4,
+			"group": "fortune", "type": "Base", "weight": 0.02,
 			"configuration": {
-				"fortune": "Today might not turn out too fantastic today..."
+				"fortune": "Today might not turn out too fantastic, eh..."
 			}
 		},
 		{

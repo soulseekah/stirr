@@ -2,6 +2,7 @@ import json
 import zmq
 import threading
 import backends
+import algorithms
 
 class Stirr( object ):
 	"""The main `Stirr` class where it all comes into play."""
@@ -56,6 +57,28 @@ class Stirr( object ):
 			listener.server.context.term()
 			print( '** Stopped' )
 
+	def request_handler( self, data ):
+		"""Handles an incoming request for data."""
+
+		group = self.backends.get( data.get( 'group', 'default' ), False )
+		if not group:
+			return { 'error': 'Group %s does not exist.' % data.get( 'group', 'default' ) }
+
+		_type = data.get( 'type', 'Base' )
+		backends = filter( lambda b: b.__class__.__name__ == '%sBackend' % _type, group )
+		if not len( backends ):
+			return { 'error': 'No %sBackends available.' % _type }
+
+		algorithm = data.get( 'algorithm', 'Casual' )
+		try:
+			algorithm = algorithms.create( algorithm )
+		except:
+			return { 'error': 'No %sAlgorithm available.' % algorithm }
+
+		backend = algorithm.select( backends, *data.get( 'args', [] ) )
+
+		return backend.configuration
+
 class ListenerThread( threading.Thread ):
 	"""Main listener."""
 
@@ -88,7 +111,10 @@ class ListenerThread( threading.Thread ):
 						print( 'Received: %s' % data )
 
 					server.send( _id, zmq.SNDMORE )
-					server.send_json( data )
+					returning = self.container.request_handler( data )
+					if self.container.debug:
+						print( 'Returning: %s' % returning )
+					server.send_json( returning )
 
 class HeartbeatThread( threading.Thread ):
 	"""Heartbeat, checks the validity of each backend."""
