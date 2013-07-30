@@ -33,6 +33,3 @@ def main():
 
 	stirr = Stirr( **vars( args ) )
 	stirr.run()
-
-if __name__ == '__main__':
-	main()

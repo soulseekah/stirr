@@ -1,4 +1,4 @@
-from backends.base import BaseBackend
+from stirr.backends.base import BaseBackend
 
 class MySQLBackend( BaseBackend ):
 	pass

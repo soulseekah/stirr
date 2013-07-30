@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
 	name = 'stirr',
@@ -9,7 +9,7 @@ setup(
 	author_email = 'gennady@kovshenin.com',
 	url = 'https://github.com/soulseekah/stirr',
 
-	packages = [ 'stirr' ],
+	packages = find_packages(),
 	entry_points = {
 		'console_scripts': [ 'stirr = stirr.stirr:main' ]
 	},

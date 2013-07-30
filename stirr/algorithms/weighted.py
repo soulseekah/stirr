@@ -1,4 +1,4 @@
-from algorithms.base import BaseAlgorithm
+from stirr.algorithms.base import BaseAlgorithm
 from random import choice
 
 class WeightedAlgorithm( BaseAlgorithm ):
