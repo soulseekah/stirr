@@ -1,4 +1,5 @@
-stirr
-=====
+`stirr` is a [zmq](http://zeromq.org/)-supported backend manager that can be queried for backend configurations.
 
-A load-balancing in-memory backend manager written in Python
+##Installation
+
+`python setup.py install` should do the trick, so should `pip install .`, in theory.

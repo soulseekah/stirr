@@ -1,0 +1,45 @@
+{
+	"backends": [
+
+		"This is a comment. It is ignored.",
+		{
+			"group": "mysql", "type": "MySQL", "weight": 0.9,
+			"configuration": {
+				"connection": {
+					"host": "node1.myserver.com",
+					"port": "3306"
+				}
+			}
+		},
+		{
+			"group": "mysql", "type": "MySQL", "weight": 0.7,
+			"configuration": {
+				"connection": {
+					"host": "node2.myserver.com",
+					"port": "3306"
+				}
+			}
+		},
+
+
+		"This is a comment. It is ignored.",
+		{
+			"group": "fortune", "type": "Base", "weight": 1.5,
+			"configuration": {
+				"fortune": "Today's going to be a great day!"
+			}
+		},
+		{
+			"group": "fortune", "type": "Base", "weight": 0.4,
+			"configuration": {
+				"fortune": "Today might not turn out too fantastic today..."
+			}
+		},
+		{
+			"group": "fortune", "type": "Base", "weight": 0.9,
+			"configuration": {
+				"fortune": "Not sure yet, we'll live and see."
+			}
+		}
+	]
+}
