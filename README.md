@@ -68,3 +68,4 @@ The response is the `configuration` dump of the chosen backend. An `error` can b
 ###Backend types
 
 - `Base` - a backend that is always up, never performs any heartbeat checks.
+- `MySQL` - a MySQl backend that uses `mysqladmin` for status checks. Takes the following optional arguments: username, password, host, port, thread-limit. For example: `"type": [ "MySQL", "root", "letmein", "localhost", 3306, 16 ]`. The thread limit is the assumed limit of connection threads the particular server can run at once. The weight will bias the health of this backend (multiply).
