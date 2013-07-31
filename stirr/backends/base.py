@@ -16,6 +16,9 @@ class BaseBackend( object ):
 		"""Are we alive?"""
 		pass
 
+	def is_alive( self ):
+		return True
+
 	def __str__( self ):
 		return '%s [%.02f], %s' % \
 			( self.__class__.__name__, self.weight, self.configuration )

@@ -67,6 +67,8 @@ class Stirr( object ):
 
 		_type = data.get( 'type', 'Base' )
 		backends = filter( lambda b: b.__class__.__name__ == '%sBackend' % _type, group )
+		backends = filter( lambda b: b.is_alive(), backends )
+
 		if not len( backends ):
 			return { 'error': 'No %sBackends available.' % _type }
 

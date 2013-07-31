@@ -59,3 +59,6 @@ class MySQLBackend( BaseBackend ):
 				self.health = health
 
 			time.sleep( self.heartbeat_interval )
+
+	def is_alive( self ):
+		return self.health > 0
