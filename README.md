@@ -21,6 +21,27 @@ optional arguments:
                         tcp://127.0.0.1:5555)
 ```
 
+###Configuration
+
+Configurations are defined using JSON syntax as follows:
+
+```json
+{
+	"backends": [
+		"all strings are mere comments" (optional),
+
+		{
+			"group": "default" (optional),
+			"type": "Base" (required, can be array with arguments [ "MySQL", "root", "letmein" ] for some backends)
+			"weight": 1.0 (optional),
+			"configuration": <arbitrary structure> (required)
+		}
+	]
+}
+```
+
+###Client API
+
 All communication is done via zmq using JSON serialization. Since there is no encryption `stirr` should probably only be used on the localhost. No sensitive data should be passed over the wire. See the `examples` directory for a sample client.
 
 A typical request payload would look like:
