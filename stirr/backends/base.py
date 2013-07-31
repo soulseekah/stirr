@@ -5,7 +5,7 @@ class BaseBackend( object ):
 	weight = None
 	configuration = None
 
-	def __init__( self, group="default", weight=1.0, configuration=None ):
+	def __init__( self, group="default", weight=1.0, configuration=None, args=[] ):
 		self.group = group
 		self.weight = weight
 		self.configuration = configuration

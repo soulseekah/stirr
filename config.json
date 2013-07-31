@@ -3,7 +3,7 @@
 
 		"This is a comment. It is ignored.",
 		{
-			"group": "mysql", "type": "MySQL", "weight": 0.9,
+			"group": "mysql", "type": [ "MySQL", "root" ], "weight": 0.9,
 			"configuration": {
 				"connection": {
 					"host": "node1.myserver.com",
@@ -12,7 +12,7 @@
 			}
 		},
 		{
-			"group": "mysql", "type": "MySQL", "weight": 0.7,
+			"group": "mysql", "type": [ "MySQL", "root" ], "weight": 0.7,
 			"configuration": {
 				"connection": {
 					"host": "node2.myserver.com",
