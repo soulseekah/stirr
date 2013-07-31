@@ -1,4 +1,4 @@
-def create( type='Base', group='default', weight=1.0, configuration=None ):
+def create( type='Base', heartbeat=30, group='default', weight=1.0, configuration=None ):
 	"""Creates a Backend of a certain type."""
 
 	if type.__class__ is list:
@@ -12,4 +12,4 @@ def create( type='Base', group='default', weight=1.0, configuration=None ):
 
 	Backend = getattr( globals().get( type.lower() ), '%sBackend' % type )
 
-	return Backend( group, weight, configuration, args )
+	return Backend( group, weight, heartbeat, configuration, args )

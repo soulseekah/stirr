@@ -3,16 +3,18 @@ class BaseBackend( object ):
 
 	group = None
 	weight = None
+	heartbeat_interval = None
 	configuration = None
 
-	def __init__( self, group="default", weight=1.0, configuration=None, args=[] ):
+	def __init__( self, group="default", weight=1.0, heartbeat=30, configuration=None, args=[] ):
 		self.group = group
 		self.weight = weight
+		self.heartbeat_interval = heartbeat
 		self.configuration = configuration
 
-	def heartbeat( self ):
+	def heartbeat( self, container ):
 		"""Are we alive?"""
-		return True
+		pass
 
 	def __str__( self ):
 		return '%s [%.02f], %s' % \

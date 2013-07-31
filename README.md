@@ -34,6 +34,7 @@ Configurations are defined using JSON syntax as follows:
 			"group": "default" (optional),
 			"type": "Base" (required, can be array with arguments [ "MySQL", "root", "letmein" ] for some backends)
 			"weight": 1.0 (optional),
+			"heartbeat": 15 (optional),
 			"configuration": <arbitrary structure> (required)
 		}
 	]

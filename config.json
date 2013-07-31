@@ -4,6 +4,7 @@
 		"This is a comment. It is ignored.",
 		{
 			"group": "mysql", "type": [ "MySQL", "root" ], "weight": 0.9,
+			"heartbeat": 15,
 			"configuration": {
 				"connection": {
 					"host": "node1.myserver.com",
@@ -13,6 +14,7 @@
 		},
 		{
 			"group": "mysql", "type": [ "MySQL", "root" ], "weight": 0.7,
+			"heartbeat": 30,
 			"configuration": {
 				"connection": {
 					"host": "node2.myserver.com",

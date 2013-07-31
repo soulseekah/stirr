@@ -7,7 +7,7 @@ context = zmq.Context()
 server = context.socket( zmq.DEALER )
 server.connect( 'tcp://127.0.0.1:5555' )
 
-server.send_json( make_request( 'fortune', algorithm='Weighted' ) )
+server.send_json( make_request( 'mysql', 'MySQL', algorithm='Weighted' ) )
 
 print server.recv_json()
 

@@ -3,6 +3,7 @@ import zmq
 import threading
 import backends
 import algorithms
+from datetime import datetime
 
 class Stirr( object ):
 	"""The main `Stirr` class where it all comes into play."""
@@ -79,11 +80,14 @@ class Stirr( object ):
 
 		return backend.configuration
 
+	def heartbeat_state( self, backend, reason ):
+		print( '** [%s] %s %s' % ( datetime.now(), backend, reason ) )
+
 class ListenerThread( threading.Thread ):
 	"""Main listener."""
 
 	server = None
-	containter = None
+	container = None
 
 	def __init__( self, container  ):
 		threading.Thread.__init__( self )
@@ -117,15 +121,17 @@ class ListenerThread( threading.Thread ):
 					server.send_json( returning )
 
 class HeartbeatThread( threading.Thread ):
-	"""Heartbeat, checks the validity of each backend."""
+	"""Launches the hearbeat of each backend."""
 
-	containter = None
+	container = None
 
 	def __init__( self, container  ):
 		threading.Thread.__init__( self )
 		self.container = container
 
 	def run( self ):
-		while True:
-			pass
-
+		for group, _backends in self.container.backends.iteritems():
+			for backend in _backends:
+				thread = threading.Thread( target=backend.heartbeat, args=[ self.container ] )
+				thread.daemon = True
+				thread.start()
