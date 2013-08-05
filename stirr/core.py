@@ -54,8 +54,9 @@ class Stirr( object ):
 			while True:
 				pass
 		except KeyboardInterrupt:
-			listener.server.close()
-			listener.server.context.term()
+			listener.backend.close()
+			listener.frontend.close()
+			listener.context.term()
 			print( '** Stopped' )
 
 	def request_handler( self, data ):
@@ -85,42 +86,84 @@ class Stirr( object ):
 	def heartbeat_state( self, backend, reason ):
 		print( '** [%s] %s %s' % ( datetime.now(), backend, reason ) )
 
+class HandlerThread( threading.Thread ):
+	"""Non-blocking handling."""
+
+	container = None
+	socket = None
+
+	def __init__( self, container, context ):
+		threading.Thread.__init__( self )
+		self.container = container
+		self.socket = context.socket( zmq.DEALER )
+		self.socket.connect( 'inproc://handler' )
+
+	def run( self ):
+		_id = self.socket.recv()
+		try:
+			data = self.socket.recv_json()
+		except:
+			self.socket.send( _id, zmq.SNDMORE )
+			self.socket.send_json( { 'error': 'Unknown' } )
+			self.socket.close()
+			return
+
+		if self.container.debug:
+			print( 'Received: %s' % data )
+
+		returning = self.container.request_handler( data )
+		if self.container.debug:
+			print( 'Returning: %s' % returning )
+		self.socket.send( _id, zmq.SNDMORE )
+		self.socket.send_json( returning )
+
+		self.socket.close()
+
 class ListenerThread( threading.Thread ):
 	"""Main listener."""
 
-	server = None
 	container = None
+	context = None
+	frontend = None
+	backend = None
 
 	def __init__( self, container  ):
 		threading.Thread.__init__( self )
 		self.container = container
 
 	def run( self ):
-		context = zmq.Context()
-		server = context.socket( zmq.ROUTER )
-		server.context = context
+		self.context = zmq.Context()
 
-		self.server = server
-		self.server.bind( self.container.bind )
+		frontend = self.context.socket( zmq.ROUTER )
+		frontend.bind( self.container.bind )
+
+		self.frontend = frontend
+
+		backend = self.context.socket( zmq.DEALER )
+		backend.bind( 'inproc://handler' )
+
+		self.backend = backend
 
 		poll = zmq.Poller()
-		poll.register( server, zmq.POLLIN )
+		poll.register( frontend, zmq.POLLIN )
+		poll.register( backend, zmq.POLLIN )
 
 		while True:
 			sockets = dict( poll.poll() )
-			if server in sockets:
-				if sockets[server] == zmq.POLLIN:
-					_id = server.recv()
-					data = server.recv_json()
-
-					if self.container.debug:
-						print( 'Received: %s' % data )
-
-					server.send( _id, zmq.SNDMORE )
-					returning = self.container.request_handler( data )
-					if self.container.debug:
-						print( 'Returning: %s' % returning )
-					server.send_json( returning )
+			if frontend in sockets:
+				if sockets[frontend] == zmq.POLLIN:
+					handler = HandlerThread( self.container, self.context )
+					_id = frontend.recv()
+					data = frontend.recv()
+					handler.start()
+					backend.send( _id, zmq.SNDMORE )
+					backend.send( data )
+			elif backend in sockets:
+				if sockets[backend] == zmq.POLLIN:
+					_id = backend.recv()
+					data = backend.recv()
+					frontend.send( _id, zmq.SNDMORE )
+					frontend.send( data )
 
 class HeartbeatThread( threading.Thread ):
 	"""Launches the hearbeat of each backend."""
